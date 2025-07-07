@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 15:12:26 by gojeda            #+#    #+#             */
-/*   Updated: 2025/07/07 17:06:55 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/07/07 17:32:40 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	main(int argc, char **argv)
 {
-	
+	if  (argc != 5)
+		return (ft_printf(ARGC_ERROR), 1);
 	return (0);
 }
