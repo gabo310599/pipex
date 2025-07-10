@@ -4,7 +4,8 @@ CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
 
 SRCS = pipex.c \
-		
+		pipex_utils.c \
+		create_and_execute.c
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = -I include -I libft
@@ -20,7 +21,7 @@ $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBFT) -o $(NAME)
 	@echo "✅ Proyecto compilado correctamente."
 
-#-----------------------------------------------------------
+#----------------------------Utils-------------------------------
 # Compilar archivos fuente
 #-----------------------------------------------------------
 %.o: %.c
@@ -42,13 +43,13 @@ bonus: $(OBJS)
 clean:
 	@rm -f $(OBJS)
 	@$(MAKE) -C libft clean > /dev/null
-	@$(MAKE) -C bonus clean > /dev/null
+#	@$(MAKE) -C bonus clean > /dev/null
 	@echo "🧹 Archivos objeto y temporales eliminados."
 
 fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -C libft fclean > /dev/null
-	@$(MAKE) -C bonus fclean > /dev/null
+#	@$(MAKE) -C bonus fclean > /dev/null
 	@echo "🧼 Todo limpio."
 
 re: fclean all
