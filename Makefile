@@ -5,7 +5,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 SRCS = pipex.c \
 		pipex_utils.c \
-		create_and_execute.c
+		create_pids.c 
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = -I include -I libft
