@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 15:12:35 by gojeda            #+#    #+#             */
-/*   Updated: 2025/07/11 18:41:00 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/07/14 14:18:07 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 /* ************************************************************************** */
 //UTILS
-void	error_exit(const char *msg);
+void	error_exit(char *msg, bool use_perror, int exit_code);
 bool	open_files_and_pipes(int *infile, int *outfile,
 			char **argv, int pipefd[2]);
 void	close_all(int infile, int outfile, int pipefd[2]);

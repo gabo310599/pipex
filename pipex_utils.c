@@ -6,16 +6,23 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 21:46:31 by gojeda            #+#    #+#             */
-/*   Updated: 2025/07/11 17:25:07 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/07/14 16:09:23 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	error_exit(const char *msg)
+void	error_exit(char *msg, bool use_perror, int exit_code)
 {
-	perror(msg);
-	exit(EXIT_FAILURE);
+	ft_putstr_fd("pipex: ", 2);
+	if (use_perror)
+		perror(msg);
+	else
+	{
+		ft_putstr_fd(msg, 2);
+		ft_putstr_fd("\n", 2);
+	}
+	exit(exit_code);
 }
 
 bool	open_files_and_pipes(int *infile, int *outfile,
@@ -23,12 +30,18 @@ bool	open_files_and_pipes(int *infile, int *outfile,
 {
 	*infile = open(argv[1], O_RDONLY);
 	if (*infile < 0)
-		error_exit("Error opening infile");
+	{
+		ft_putstr_fd("pipex: ", 2),
+		perror(argv[1]);
+		*infile = open("/dev/null", O_RDONLY);
+		if (*infile < 0)
+			error_exit("/dev/null", true, 1);
+	}
 	*outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (*outfile < 0)
-		error_exit("Error opening outfile");
+		error_exit(argv[4], true, 1);
 	if (pipe(pipefd) == -1)
-		error_exit("Pipe failed");
+		error_exit("pipe", true, 1);
 	return (true);
 }
 

@@ -1,0 +1,21 @@
+1. Archivo inexistente como infile
+# Bash
+< nofile ls | wc > test_out.txt
+
+# Pipex
+./pipex nofile ls wc test_out.txt
+
+2. Comando inexistente como primer comando
+# Bash
+< infile.txt nonexistentcmd | wc > test_out.txt
+
+# Pipex
+./pipex infile.txt nonexistentcmd wc test_out.txt
+
+3. Comando inexistente como segundo comando
+# Bash
+< infile.txt ls | nonexistentcmd > test_out.txt
+
+# Pipex
+./pipex infile.txt ls nonexistentcmd test_out.txt
+

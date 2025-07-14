@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 00:29:51 by gojeda            #+#    #+#             */
-/*   Updated: 2025/07/11 18:37:43 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/07/14 15:55:09 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,21 @@ void	execute_cmd(char *cmd, char **envp)
 	char	*cmd_path;
 
 	cmd_args = ft_split(cmd, ' ');
-	if (!cmd_args || !cmd_args[0])
-		error_exit("Invalid command");
+	if (!cmd_args || !cmd_args[0] || cmd_args[0][0] == '\0')
+		error_exit("invalid null command", false, 127);
 	cmd_path = get_cmd_path(cmd_args[0], envp);
 	if (!cmd_path)
 	{
+		ft_putstr_fd("pipex: ", 2);
+		ft_putstr_fd(cmd_args[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
 		free_split(cmd_args);
-		error_exit("Command not found");
+		exit(127);
 	}
 	execve(cmd_path, cmd_args, envp);
 	free_split(cmd_args);
-	error_exit("execve failed");
+	free(cmd_path);
+	error_exit("execve", true, 1);
 }
 
 pid_t	create_pid(int fd[2], int pipefd[2], char **argv,
@@ -75,11 +79,13 @@ pid_t	create_pid(int fd[2], int pipefd[2], char **argv,
 
 	pid1 = fork();
 	if (pid1 == -1)
-		error_exit("Fork failed");
+		error_exit("fork", true, 1);
 	if (pid1 == 0)
 	{
-		dup2(fd[0], STDIN_FILENO);
-		dup2(pipefd[1], STDOUT_FILENO);
+		if (dup2(fd[0], STDIN_FILENO) == -1)
+			error_exit("dup2", true, 1);
+		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+			error_exit("dup2", true, 1);
 		close_all(fd[0], fd[1], pipefd);
 		execute_cmd(argv[2], envp);
 	}
@@ -93,11 +99,13 @@ pid_t	create_second_pid(int fd[2], int pipefd[2], char **argv,
 
 	pid2 = fork();
 	if (pid2 == -1)
-		error_exit("Fork failed");
+		error_exit("fork", true, 1);
 	if (pid2 == 0)
 	{
-		dup2(pipefd[0], STDIN_FILENO);
-		dup2(fd[1], STDOUT_FILENO);
+		if (dup2(pipefd[0], STDIN_FILENO) == -1)
+			error_exit("dup2", true, 1);
+		if (dup2(fd[1], STDOUT_FILENO) == -1)
+			error_exit("dup2", true, 1);
 		close_all(fd[0], fd[1], pipefd);
 		execute_cmd(argv[3], envp);
 	}
