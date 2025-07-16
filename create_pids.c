@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 00:29:51 by gojeda            #+#    #+#             */
-/*   Updated: 2025/07/14 15:55:09 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/07/16 16:20:53 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,21 @@ void	execute_cmd(char *cmd, char **envp)
 {
 	char	**cmd_args;
 	char	*cmd_path;
+	char	*msg_error;
 
-	cmd_args = ft_split(cmd, ' ');
+	cmd_args = ft_split_cmd(cmd);
 	if (!cmd_args || !cmd_args[0] || cmd_args[0][0] == '\0')
 		error_exit("invalid null command", false, 127);
-	cmd_path = get_cmd_path(cmd_args[0], envp);
+	cmd_path = get_cmd(cmd_args[0], envp);
 	if (!cmd_path)
 	{
-		ft_putstr_fd("pipex: ", 2);
-		ft_putstr_fd(cmd_args[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
+		msg_error = ft_strjoin_three("pipex: ", cmd_args[0],
+				": command not found\n");
+		if (msg_error)
+		{
+			ft_putstr_fd(msg_error, 2);
+			free(msg_error);
+		}
 		free_split(cmd_args);
 		exit(127);
 	}

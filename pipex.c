@@ -6,7 +6,7 @@
 /*   By: gojeda <gojeda@student.42madrid.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 15:12:26 by gojeda            #+#    #+#             */
-/*   Updated: 2025/07/14 16:03:40 by gojeda           ###   ########.fr       */
+/*   Updated: 2025/07/16 16:48:31 by gojeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,17 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		pipefd[2];
-	int		fd[2];
-	pid_t	pid1;
-	pid_t	pid2;
+	int				pipefd[2];
+	int				fd[2];
+	t_pipex_status	ps;
 
 	if (argc != 5)
 		return (ft_putstr_fd(ARGC_ERROR, 2), 1);
 	open_files_and_pipes(&fd[0], &fd[1], argv, pipefd);
-	pid1 = create_pid(fd, pipefd, argv, envp);
-	pid2 = create_second_pid(fd, pipefd, argv, envp);
+	ps.pid1 = create_pid(fd, pipefd, argv, envp);
+	waitpid(ps.pid1, &ps.status1, 0);
+	ps.pid2 = create_second_pid(fd, pipefd, argv, envp);
 	close_all(fd[0], fd[1], pipefd);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
-	return (0);
+	waitpid(ps.pid2, &ps.status2, 0);
+	return (exit_status(&ps));
 }
